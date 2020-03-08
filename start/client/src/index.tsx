@@ -6,6 +6,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import Pages from "./pages";
 import injectStyles from "./styles";
+import { resolvers, typeDefs } from "./resolvers";
 
 const cache = new InMemoryCache();
 const link = new HttpLink({
@@ -15,9 +16,19 @@ const link = new HttpLink({
 const client = new ApolloClient({
     cache,
     link: new HttpLink({
-        headers: { authorization: localStorage.getItem('token') },
         uri: "http://localhost:4000/graphql",
+        headers: {
+            authorization: localStorage.getItem("token")
+        }
     }),
+    typeDefs,
+    resolvers
+});
+cache.writeData({
+    data: {
+        isLoggedIn: !!localStorage.getItem("token"),
+        cartItems: []
+    }
 });
 
 cache.writeData({
