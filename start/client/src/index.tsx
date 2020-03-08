@@ -14,7 +14,17 @@ const link = new HttpLink({
 
 const client = new ApolloClient({
     cache,
-    link
+    link: new HttpLink({
+        headers: { authorization: localStorage.getItem('token') },
+        uri: "http://localhost:4000/graphql",
+    }),
+});
+
+cache.writeData({
+    data: {
+        isLoggedIn: !!localStorage.getItem('token'),
+        cartItems: [],
+    },
 });
 
 injectStyles();
